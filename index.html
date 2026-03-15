@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DinkIQ — Pickleball Performance Tracker</title>
+  <meta name="description" content="Track every match, analyze your game, and share your wins. DinkIQ is the premium pickleball tracker for serious players." />
+  <link rel="icon" href="favicon.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0F0F0F;
+      --surface: #1A1A1A;
+      --border: #2A2A2A;
+      --accent: #34D399;
+      --accent-muted: rgba(52, 211, 153, 0.1);
+      --text-primary: #F5F5F5;
+      --text-secondary: #A0A0A0;
+      --text-tertiary: #606060;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px;
+      background: rgba(15,15,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: var(--accent); }
+    .nav-link { font-size: 14px; color: var(--text-secondary); transition: color 0.2s; }
+    .nav-link:hover { color: var(--text-primary); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent-muted);
+      border: 1px solid rgba(52,211,153,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+    .hero h1 {
+      font-size: clamp(42px, 8vw, 80px);
+      font-weight: 800; letter-spacing: -2px; line-height: 1.05;
+      margin-bottom: 24px; max-width: 800px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 18px; color: var(--text-secondary);
+      max-width: 480px; line-height: 1.7; margin-bottom: 48px;
+    }
+    .cta-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--accent); color: #000;
+      font-size: 16px; font-weight: 700;
+      padding: 16px 32px; border-radius: 100px;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 0 32px rgba(52,211,153,0.25);
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: var(--text-secondary);
+      font-size: 16px; font-weight: 500;
+      padding: 16px 32px; border-radius: 100px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* FEATURES */
+    .section { padding: 100px 24px; max-width: 1000px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--accent); text-align: center; margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800; letter-spacing: -1px;
+      text-align: center; margin-bottom: 64px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(52,211,153,0.3); }
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-muted); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 20px;
+    }
+    .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* PRO */
+    .pro-section {
+      padding: 100px 24px;
+      background: linear-gradient(180deg, var(--bg) 0%, #0A1F16 50%, var(--bg) 100%);
+    }
+    .pro-inner { max-width: 560px; margin: 0 auto; text-align: center; }
+    .pro-inner h2 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800; letter-spacing: -1px; margin-bottom: 16px;
+    }
+    .pro-inner p { font-size: 16px; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.7; }
+    .pro-features {
+      list-style: none; display: flex; flex-direction: column; gap: 12px;
+      margin-bottom: 40px; text-align: left;
+    }
+    .pro-features li {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 15px; color: var(--text-secondary);
+    }
+    .pro-features li::before { content: '✓'; color: var(--accent); font-weight: 700; font-size: 16px; flex-shrink: 0; }
+    .price-tag { display: inline-flex; align-items: baseline; gap: 6px; margin-bottom: 24px; }
+    .price-amount { font-size: 52px; font-weight: 800; letter-spacing: -2px; color: var(--accent); }
+    .price-note { font-size: 14px; color: var(--text-tertiary); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border); padding: 40px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { font-size: 12px; font-weight: 700; letter-spacing: 2.5px; color: var(--accent); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-tertiary); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-primary); }
+    .footer-copy { font-size: 12px; color: var(--text-tertiary); width: 100%; }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .section { padding: 72px 20px; }
+      footer { flex-direction: column; align-items: flex-start; padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-logo">DINKIQ</span>
+    <a href="/support.html" class="nav-link">Support</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">🏓 For Pickleball Players</div>
+    <h1>Play smarter.<br /><span>Track everything.</span></h1>
+    <p>Log matches, analyze your game, and watch your Play Rating climb. The performance tracker built for serious pickleball players.</p>
+    <div class="cta-group">
+      <a href="https://apps.apple.com/app/id6760616724" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download on the App Store
+      </a>
+      <a href="/support.html" class="btn-secondary">Learn more</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <p class="section-label">FEATURES</p>
+    <h2 class="section-title">Everything you need to level up</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Match Logging</h3>
+        <p>Log scores, partners, opponents, venue, and third shot type in seconds. Every detail captured.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>DinkIQ Score</h3>
+        <p>Your proprietary performance score — recency-weighted, trend-aware, and built on your real match history.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Play Rating</h3>
+        <p>An Elo-based DUPR estimation that updates after every match. Know where you stand without an official rating.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏅</div>
+        <h3>Deep Analytics</h3>
+        <p>Win rates by partner, opponent, court, and venue. Spot patterns and fix weaknesses with real data.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗂️</div>
+        <h3>Share Cards</h3>
+        <p>Beautiful post-game cards ready to share to Instagram Stories or anywhere else. Show off your wins.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>100% Private</h3>
+        <p>All data lives on your device. No accounts, no servers, no ads. Your game stays yours.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pro-section">
+    <div class="pro-inner">
+      <p class="section-label">DINKIQ PRO</p>
+      <h2>One payment.<br />Yours forever.</h2>
+      <p>No subscription. No recurring charges. Pay once and unlock everything — for life.</p>
+      <ul class="pro-features">
+        <li>Unlimited match history</li>
+        <li>Full analytics suite</li>
+        <li>Partner &amp; opponent breakdowns</li>
+        <li>CSV export</li>
+        <li>All share card templates</li>
+        <li>Year in Review card</li>
+      </ul>
+      <div class="price-tag">
+        <span class="price-amount">$6.99</span>
+        <span class="price-note">one-time</span>
+      </div>
+      <br />
+      <a href="https://apps.apple.com/app/id6760616724" class="btn-primary">Get DinkIQ Pro</a>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-logo">DINKIQ</span>
+    <div class="footer-links">
+      <a href="/support.html">Support</a>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="mailto:support@dinkiq.app">Contact</a>
+    </div>
+    <p class="footer-copy">© 2025 DinkIQ. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
